@@ -82,7 +82,7 @@ ORDER BY 'Average_Rating' DESC;
 
 **5. Average of book rating by each publisher**
 
-``sql
+```sql
 SELECT b.Publisher, 
        AVG(CAST (r.Book_Rating AS NUMERIC)) AS 'Avg_Rating'
 FROM books b
