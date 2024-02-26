@@ -1,6 +1,6 @@
 # SQL-Server-Project--Library-
 
-**Author:** Mohamad Hafizzuddin Bin Yahya
+**Author:** Mohamad Hafizzudin Bin Yahya
 
 **Email:** hafizz.yahya777@gmail.com
 
@@ -13,51 +13,40 @@ The SQL Server (Library) Project is to showcase my skill in SQL server that i ac
 ABOUT THE DATASET
 
 **books Table**
-**- ISBN**                    : The unique identifier for each book (no duplicate).
-                                - Primary Key.
-                                
-**- Book_Title**              : The title of the book.
-
-**- Book_Author**             : The name of book author (may have duplicate).
-
-**- Year_Of_Publication**     : Year of book publish.
-                                - (Range from 1376 - 2021).
-                                - Excluding year = 0  and year >+ 2024.
-                                
-**- Publisher**               : - Name of the book publisher (contain duplicate).
+- **isbn**: The unique identifier for each book (no duplicate).
+  - Primary Key.
+- **book_title**: The title of the book.
+- **book_author**: The name of book author (may have duplicate).
+- **year_publish**: Year of book publish.
+  - (Range from 1376 - 2021).
+  - Excluding year = 0  and year >= 2024.
+- **publisher**: Name of the book publisher (contain duplicate).
 
 **ratings Table**
-**- User_ID**                 : The ID of each user.
-                                - Foreign key.
-                                
-**- ISBN**                    : The unique identifier of each book read by each user (contain duplicate).
-                                - Foreign key.
-                                
-**- Book_Rating**             : The rating give by each user to book read.
-                                - Range from 1 - 10 rating (explicit rating).
-                                - 0 rating indicate implicit rating.
-
-**users Table**
-
-**- User_ID**                 : The unique identifier for each user
-                                - Primary Key
-                                
-**- Location**                : The address/location of user 
-
-**- Age**                     : Age of user.
-                              - Range from 6 years old - 116 years old
-                              
-**- Country**                 : The country which the user come from
-
-**Dataset:**                    https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset
-
+- **user_id** : The ID of each user.
+  - foreign key references to user_id in users table.
+- **isbn** : The unique identifier of each book read by each user (contain duplicate).
+  - foreign key references to isbn in books table.
+- **book_ratings** : The rating give by each user to book read.
+  - (Range from 1376 - 2021).
+  - 0 rating indicate implicit rating. 
+  
+ **users Table**
+ - **user_id** : The unique identifier for each user.
+   - Primary Key.
+ - **location** : The address/location of user .
+ - **age** : Age of user.
+   - Contain null value.
+   - Range from 6 years old - 116 years old.
+- **country** : The country which the user came from.
+  
+**Dataset:** https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset
 
 **Entity Relationship Diagram**
 
-
 ![ERD](https://github.com/hfzzddn/SQL-Server-Project--Library-/assets/157438704/10fa60b9-58e7-4994-81d2-df67b159cb30)
 
-
+ 
 
 
 
