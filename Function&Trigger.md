@@ -1,4 +1,4 @@
-  **FUNCTION AND TRIGGER**
+  **FUNCTION,STORE PROCEDURE AND TRIGGER**
 
 **1. Find the average book by author**
 
@@ -107,9 +107,70 @@ EXEC favbook @ID = 183;
 | Estudios sobre el amor                       | 183     | 8           | 27  | PORTUGAL |
 
 
+**3. Average rating of book**
+-Book that were read more than 10 times
+-Excluding book rating = 0
+
+```sql
+CREATE OR ALTER FUNCTION avgbook()
+RETURNS TABLE
+AS
+RETURN
+(
+WITH count AS (                                          
+                SELECT ISBN, 
+                COUNT(*) AS 'Book_Count'
+                FROM ratings
+				WHERE Book_Rating > 0
+                GROUP BY ISBN
+                HAVING COUNT(*) > 10)
 
 
+SELECT b.Book_Title, 
+       r.ISBN, 
+       ROUND(AVG(CAST(r.Book_Rating AS NUMERIC)),2) AS 'Avg_Rating'
+FROM books b
+INNER JOIN ratings r
+ON b.ISBN = r.ISBN
+WHERE r.ISBN IN 
+               (SELECT ISBN FROM count)
+GROUP BY b.Book_Title,r.ISBN
+);
+```
 
+-Only show top 5 answer
+
+| Book_Title                                                                                             | ISBN         | Avg_Rating |
+|--------------------------------------------------------------------------------------------------------|--------------|------------|
+| Die unendliche Geschichte Von A bis Z                                                                  | 3522128001   | 8.070000   |
+| Free                                                                                                   | 1844262553   | 7.960000   |
+| Harry Potter y el cÃ¡liz de fuego                                                                      | 8478886451   | 7.880000   |
+| Der Kleine Hobbit                                                                                      | 3423071516   | 7.800000   |
+| Jesus Freaks DC Talk and The Voice of the Martyrs - Stories of Those Who Stood For Jesus, the Ultimate Jesus Freaks | 1577780728 | 7.530000   |
+
+
+**4. Trigger for refresh avgbookbyauthor Function on ratings table**
+
+```sql
+CREATE TRIGGER refreshavgbookbyauthortriggerR
+ON ratings
+AFTER INSERT,UPDATE,DELETE
+AS
+BEGIN
+	EXEC sp_refreshsqlmodule 'avgbookbyauthor'; 
+END;
+```
+
+**4. Trigger for refresh avgbookbyauthor Function on books table**
+```sql
+CREATE TRIGGER refreshavgbookbyauthortriggerB
+ON books
+AFTER INSERT,UPDATE,DELETE
+AS
+BEGIN
+	EXEC sp_refreshsqlmodule 'avgbookbyauthor'; 
+END;
+```
 
 
 
