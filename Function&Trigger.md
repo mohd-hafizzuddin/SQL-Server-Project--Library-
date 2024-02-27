@@ -1,4 +1,4 @@
-**FUNCTION AND TRIGGER**
+  **FUNCTION AND TRIGGER**
 
 **1. Find the average book by author**
 
@@ -38,31 +38,81 @@ HAVING ROUND(AVG(CAST (r.Book_Rating AS NUMERIC)),2) > 6
 
 
 ```sql
-CREATE OR ALTER FUNCTION favbook (@ID INT)
-RETURNS TABLE
+CREATE OR ALTER PROCEDURE favbook (@ID INT)
 AS
-RETURN
-(
-          WITH rank AS ( -- Inside this cte we use RANK() to rank all the book by each user
-		  SELECT ISBN,        
-                 User_ID,
-                 Book_Rating,
-	             RANK() OVER (PARTITION BY User_ID ORDER BY Book_Rating DESC) AS 'row_num'
-          FROM ratings)
-
-          SELECT b.Book_Title AS 'Favourite_Book',r.User_ID,r.Book_Rating -- We then select book title by each user ID with book rating more than 7
-          FROM rank r                                                     -- If the user do not have book rating more than 7, we assume the user do not have any favourite book
-          INNER JOIN books b
-          ON r.ISBN = b.ISBN
-          WHERE row_num = 1 
-                AND Book_Rating > 7 
-	            AND User_ID = @ID
-);
+BEGIN
+	IF EXISTS (SELECT 1 FROM ratings WHERE User_ID = @ID) AND EXISTS (SELECT 1 FROM users WHERE User_ID = @ID) -- check if @ID parameter exists in ratings table
+        BEGIN                                                                                                      -- check if @ID parameter exists in users table
+	     IF EXISTS ( --condition that check the existence of fav book                                          -- AND logical operator combine 2 condition 
+		    SELECT TOP 1 1                                                                                 --Ensure both condition must be true
+			FROM books b
+				INNER JOIN ratings r
+				ON b.ISBN = r.ISBN
+				INNER JOIN users u
+				ON u.User_ID = r.User_ID
+				WHERE r.Book_Rating > 7
+				AND
+				r.User_ID = @ID
+                )
+		BEGIN                                  -- if exists then we select 
+				SELECT b.Book_Title, 
+				       r.User_ID, 
+					   r.Book_Rating,
+					   u.Age,
+					   u.country
+				FROM books b
+				INNER JOIN ratings r
+				ON b.ISBN = r.ISBN
+				INNER JOIN users u
+				ON u.User_ID = r.User_ID
+				WHERE r.Book_Rating > 7
+				AND
+				r.User_ID = @ID;
+                END
+             ELSE                           -- if not exist then is show no favourite book
+		        BEGIN
+                             PRINT 'No favourite book found for User ID' + CAST(@ID AS nvarchar);
+                        END
+	END
+	ELSE
+	     BEGIN --if you put @ID parameter that does not exist then it raise an error
+                   DECLARE @ErrorMessage nvarchar(200) = 'User_ID' + CAST(@ID AS nvarchar) + ' does not exist on both users and ratings table.';
+                   RAISERROR(@ErrorMessage,16,1)
+	      END
+END;
 ```
-There are user_ID in users table that not exists in ratings table.
-So it create a weakness in above function if you put any user_ID that does not exist in ratings table.
+
+```sql
+EXEC favbook @ID = 1;
+```
+
+Msg 50000, Level 16, State 1, Procedure favbook, Line 372 [Batch Start Line 2]
+User_ID1 does not exist on both users and ratings table.
+
+```sql
+EXEC favbook @ID = 83;
+```
+
+No favourite book found for User ID83
+
+```sql
+EXEC favbook @ID = 183;
+```
+
+| Book_Title                                    | User_ID | Book_Rating | Age | Country  |
+|-----------------------------------------------|---------|-------------|-----|----------|
+| Folio Junior L'histoire De Monsieur Sommer   | 183     | 8           | 27  | PORTUGAL |
+| Fahrenheit 451                               | 183     | 9           | 27  | PORTUGAL |
+| Que Se Mueran Los Feos (Fabula)              | 183     | 9           | 27  | PORTUGAL |
+| Estudios sobre el amor                       | 183     | 8           | 27  | PORTUGAL |
 
 
-| Favourite_Book | User_ID | Book_Rating |
-|----------------|---------|-------------|
-| If I'd Known Then What I Know Now Why Not Learn from the Mistakes of Others? You Can't Afford to Make Them All Yourself | 12 | 10 |
+
+
+
+
+
+
+
+
+
