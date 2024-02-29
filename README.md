@@ -2,6 +2,8 @@
 
 **Author:** Mohamad Hafizzudin Bin Yahya
 
+**Project Name:** Library Insights: Analyzing Books, Authors, and Readers
+
 **Email:** hafizz.yahya777@gmail.com
 
 **LinkedIn:** http://www.linkedin.com/in/mohamad-hafizzuddin
