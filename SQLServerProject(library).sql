@@ -1,7 +1,7 @@
 USE library;
 GO
 
-/*SELECT * FROM books: --271360 rows
+SELECT * FROM books: --271360 rows
 
 SELECT * FROM ratings;
 
@@ -346,7 +346,7 @@ BEGIN
 	END
 END;
 
-EXEC favbook @ID = 183;*/
+EXEC favbook @ID = 183;
 
 
 
