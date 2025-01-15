@@ -1,4 +1,4 @@
-# SQL-Server-Project--Library-
+# SQL-Server-Project-Library
 
 **Author:** Mohamad Hafizzudin Bin Yahya
 
