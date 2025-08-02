@@ -2,7 +2,7 @@
 
 **Author:** Mohamad Hafizzudin Bin Yahya
 
-**Project Name:** Library Insights: Analyzing Books, Authors, and Readers
+**Project Name:** Library Data Project
 
 **Email:** hafizz.yahya777@gmail.com
 
@@ -10,7 +10,7 @@
 
 INTRODUCTION
 
-The SQL Server (Library) Project is to showcase my skill in SQL server that i acquired from enrolling in Datacamp online courses. By using SQL Server Management Studio (SSMS),  the aim of these project is to show my proficiency in data analysis and data management.
+The SQL Server (Library) Project is to showcase my skill in SQL server that i acquired from enrolling in Datacamp online courses. By using SQL Server Management Studio (SSMS),  the aim of these project is to show my proficiency in data transformation and data management.
 
 ABOUT THE DATASET
 
